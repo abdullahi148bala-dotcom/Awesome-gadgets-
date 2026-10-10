@@ -42,6 +42,15 @@ function validDiscount(value: unknown) {
   return Number.isFinite(n) && n >= 0 && n <= 100;
 }
 
+function cleanHttpUrl(value: unknown) {
+  const raw = String(value || '').trim().slice(0, 500);
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:' ? parsed.toString() : '';
+  } catch { return ''; }
+}
+
 function clientIp(req: Request) {
   const forwarded = req.headers.get('x-forwarded-for');
   if (forwarded) return forwarded.split(',')[0].trim();
@@ -108,6 +117,7 @@ function cleanProduct(input: any, storeId: string) {
     category: String(input.category || 'General').trim().slice(0, 80) || 'General',
     images,
     options,
+    is_sold_out: input?.is_sold_out === true,
   };
 }
 
@@ -399,6 +409,36 @@ export default {
       const { error } = await ctx.supabaseAdmin.from('store_option_presets').delete().eq('id', presetId).eq('store_id', session.store_id);
       if (error) return json({ error: 'Could not delete the add-on preset.' }, 500);
       return json({ ok: true });
+    }
+
+    if (action === 'get_store_details') {
+      const { data, error } = await ctx.supabaseAdmin.from('store_sites').select('id,brand,slug,whatsapp,address,maps_url,phone,instagram_url,tiktok_url,facebook_url').eq('id', session.store_id).single();
+      if (error) return json({ error: 'Could not load store contact details.' }, 500);
+      return json({ store: data });
+    }
+
+    if (action === 'save_store_details') {
+      const input = body?.store || {};
+      const updates = {
+        whatsapp: String(input.whatsapp || '').replace(/[^0-9]/g, '').slice(0, 20),
+        phone: String(input.phone || '').trim().slice(0, 40),
+        address: String(input.address || '').trim().slice(0, 300),
+        maps_url: cleanHttpUrl(input.maps_url), instagram_url: cleanHttpUrl(input.instagram_url),
+        tiktok_url: cleanHttpUrl(input.tiktok_url), facebook_url: cleanHttpUrl(input.facebook_url),
+        updated_at: new Date().toISOString(),
+      };
+      const { data, error } = await ctx.supabaseAdmin.from('store_sites').update(updates).eq('id', session.store_id).select('id,brand,slug,whatsapp,address,maps_url,phone,instagram_url,tiktok_url,facebook_url').single();
+      if (error) return json({ error: 'Could not save store contact details.' }, 500);
+      return json({ store: data });
+    }
+
+    if (action === 'set_sold_out') {
+      const productId = String(body?.productId || '');
+      if (!productId) return json({ error: 'Missing product.' }, 400);
+      const { data, error } = await ctx.supabaseAdmin.from('store_products').update({ is_sold_out: body?.is_sold_out === true, updated_at: new Date().toISOString() }).eq('id', productId).eq('store_id', session.store_id).select('*').maybeSingle();
+      if (error) return json({ error: 'Could not update product availability.' }, 500);
+      if (!data) return json({ error: 'Product not found.' }, 404);
+      return json({ product: data });
     }
 
     if (action === 'list') {
