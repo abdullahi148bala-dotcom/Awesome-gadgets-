@@ -156,3 +156,30 @@ body{background:#fff}.store-app{background:#fff}.store-header{height:76px;paddin
 .checkout-terms{margin:24px 0;padding:22px;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
 .checkout-terms>p{font-size:12px;line-height:1.6;color:var(--muted);margin:16px 0 0}
 @media(max-width:760px){.about-business-details{padding:18px;margin-top:22px}.checkout-terms{padding:18px}}
+
+
+/* Homepage contact details and sold-out owner controls */
+.store-contact{padding:clamp(2.5rem,6vw,5.5rem) clamp(1rem,5vw,5rem);background:var(--paper);border-top:1px solid var(--border)}
+.store-contact-heading{max-width:680px;margin:0 auto 2rem;text-align:center}
+.store-contact-heading h2{margin:.35rem 0 .7rem;font-size:clamp(2rem,4vw,3.5rem);letter-spacing:-.045em}
+.store-contact-heading>p:last-child{color:var(--muted);line-height:1.65}
+.store-contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1rem;max-width:1180px;margin:0 auto}
+.store-contact-card{display:flex;gap:.9rem;align-items:flex-start;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:1.25rem;min-width:0}
+.store-contact-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:10px;background:var(--paper);color:var(--ink)}
+.store-contact-icon svg{width:20px;height:20px}
+.store-contact-card h3{font-size:1rem;margin:.15rem 0 .55rem}
+.store-contact-card p{color:var(--muted);line-height:1.55;margin:.2rem 0 .55rem;overflow-wrap:anywhere}
+.store-contact-card a,.store-social-links a{display:inline-flex;align-items:center;gap:.35rem;color:var(--ink);font-size:.9rem;font-weight:600;text-decoration:none;overflow-wrap:anywhere}
+.store-contact-card a:hover,.store-social-links a:hover{text-decoration:underline}
+.store-contact-card a svg{width:14px;height:14px;flex:0 0 auto}
+.store-social-links{display:flex;flex-wrap:wrap;gap:.65rem 1rem}
+.owner-store-settings{grid-column:1/-1;margin:1.25rem 0 2rem;padding:clamp(1rem,3vw,2rem);border:1px solid var(--border,#e5e7eb);border-radius:14px;background:var(--panel,var(--panel))}
+.owner-store-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.25rem 0}
+.owner-store-settings-grid label{display:flex;flex-direction:column;gap:.45rem;font-size:.9rem;font-weight:600}
+.owner-store-settings-grid input{width:100%;min-width:0}
+.owner-sold-out-badge{display:inline-block;margin-left:.35rem;padding:.2rem .45rem;border-radius:5px;background:var(--panel)0f0;color:#b42318;font-size:.65rem;letter-spacing:.04em;vertical-align:middle}
+.owner-product-sold-out{opacity:.78}
+.owner-sold-out-button,.owner-restock-button{white-space:nowrap}
+.owner-sold-out-button{color:#b42318!important}
+.owner-restock-button{color:#067647!important}
+@media(max-width:640px){.owner-store-settings-grid{grid-template-columns:minmax(0,1fr)}.store-contact{padding:2.75rem 1rem}.store-contact-card{padding:1rem}}
