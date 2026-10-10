@@ -1,0 +1,30 @@
+export const site = {
+  brand: 'Awesome Tech',
+  type: 'gadgets',
+  currency: { code: 'NGN', locale: 'en-NG', symbol: '₦' },
+  whatsapp: '2347026834576',
+  theme: { ink: '#111111', paper: '#ffffff', panel: '#f5f9fb', muted: '#667085', border: '#e5e7eb', sky: '#38bdf8', pink: '#ff3b9d', lime: '#b7f000' },
+  features: { wishlist: true, about: true },
+  storeSlug: 'awesome-gadgets',
+  labels: { addToCart:'Add to cart', addedToCart:'Added', checkout:'Order on WhatsApp', bag:'Cart', cart:'Cart', wishlist:'Saved', story:'About us', shop:'Shop', back:'Back', backToShop:'Back to shop', startShopping:'Browse gadgets', exploreCollection:'Explore gadgets', shopNow:'Shop gadgets', shopCollection:'Explore the collection', viewAll:'View all', emptyBag:'Your cart is empty.', emptyWishlist:'Nothing saved yet.' },
+  copy: {
+    description: 'Smart gadgets and everyday tech chosen to make the things you do every day a little easier.',
+    heroEyebrow: 'SMART TECH / EVERYDAY EASE',
+    heroTitle: ['Life with', 'ease.'],
+    introEyebrow: 'WELCOME TO AWESOME TECH',
+    introTitle: ['Technology that', 'fits your life.'],
+    introText: 'From power and audio to gaming, computing and phone essentials, discover useful tech without the unnecessary fuss.',
+    featuredEyebrow: 'TRENDING NOW',
+    featuredTitle: 'Gadgets people want.',
+    storyEyebrow: 'THE AWESOME TECH IDEA',
+    storyTitle: ['Less hassle.', 'More useful tech.'],
+    storyText: 'We bring practical gadgets together in one simple place, so choosing what you need feels as easy as using it.',
+    ctaEyebrow: 'READY WHEN YOU ARE',
+    ctaTitle: ['Make everyday', 'easier.'],
+    aboutEyebrow: 'ABOUT AWESOME TECH',
+    aboutTitle: ['Good tech.', 'Made easy.'],
+    aboutText: ['Awesome Tech is built around one simple idea: technology should make everyday life easier.','We bring together practical devices and accessories for phones, computers, gaming, audio and everyday life.'],
+    shopEyebrow: 'THE COLLECTION', shopTitle: 'Find your tech.', cartEyebrow:'YOUR ORDER', cartTitle:'Your cart.', wishlistEyebrow:'SAVED FOR LATER', wishlistTitle:'Your saved gadgets.'
+  },
+  categories: ['All','Phones','Audio','Power','Computing','Gaming','Accessories']
+};
