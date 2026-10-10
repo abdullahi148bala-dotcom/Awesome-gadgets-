@@ -14,7 +14,7 @@ import AdminPanel from './pages/AdminPanel';
 import SearchPage from './pages/Search';
 import { products as demoProducts } from './data/products';
 import { site } from './config/site';
-import { loadStoreProducts } from './lib/supabase';
+import { loadStoreProducts, loadStoreDetails } from './lib/supabase';
 import { variantKey } from './utils/money';
 import './styles.css';
 
@@ -53,6 +53,7 @@ function App() {
   const [wishlist, setWishlist] = useState(() => { const value = readJson(WISHLIST_KEY, []); return Array.isArray(value) ? value : []; });
   const [products, setProducts] = useState(demoProducts);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [storeDetails, setStoreDetails] = useState(null);
 
   useEffect(() => {
     const initial = readRoute();
@@ -69,9 +70,10 @@ function App() {
 
   useEffect(() => {
     let active = true;
-    loadStoreProducts().then(data => {
-      if (active && data.length) {
+    Promise.all([loadStoreProducts(), loadStoreDetails()]).then(([data, details]) => {
+      if (active && data !== null) {
         setProducts(data);
+        const availableIds = new Set(data.map(product => product.id));
         setItems(current => {
           const migrated = current.map(item => {
             const product = data.find(entry => entry.id === item.id);
@@ -83,7 +85,7 @@ function App() {
               key: variantKey(item, selected),
             };
           });
-          return migrated.reduce((merged, item) => {
+          return migrated.filter(item => availableIds.has(item.id)).reduce((merged, item) => {
             const existing = merged.find(entry => entry.key === item.key);
             if (existing) existing.qty += item.qty;
             else merged.push(item);
@@ -91,6 +93,7 @@ function App() {
           }, []);
         });
       }
+      if (active) setStoreDetails(details);
     }).catch(() => {}).finally(() => { if (active) setLoadingProducts(false); });
     return () => { active = false; };
   }, []);
@@ -127,7 +130,7 @@ function App() {
   return <div className="store-app">
     <Header go={go} count={count} />
     <main>
-      {route.page === 'home' && <Home go={go} open={product => go('product', product)} add={add} cartQty={cartQty} wishlist={wishlist} toggleWishlist={toggleWishlist} products={products} />}
+      {route.page === 'home' && <Home go={go} open={product => go('product', product)} add={add} cartQty={cartQty} wishlist={wishlist} toggleWishlist={toggleWishlist} products={products} storeDetails={storeDetails} />}
       {route.page === 'shop' && <Shop open={product => go('product', product)} add={add} cartQty={cartQty} back={back} wishlist={wishlist} toggleWishlist={toggleWishlist} products={products} initialCategory={route.category} />}
       {route.page === 'search' && <SearchPage products={products} open={product => go('product', product)} add={add} cartQty={cartQty} wishlist={wishlist} toggleWishlist={toggleWishlist} back={back} />}
       {route.page === 'product' && <Product product={selectedProduct} back={back} add={add} cartItems={items} wishlist={wishlist} toggleWishlist={toggleWishlist} />}
