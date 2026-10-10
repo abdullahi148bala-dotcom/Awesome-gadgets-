@@ -1,9 +1,9 @@
-import { ArrowRight, Zap, ShieldCheck, Truck, Smartphone, Headphones, BatteryCharging, Laptop, Gamepad2, Watch, Package } from 'lucide-react';
+import { ArrowRight, Zap, ShieldCheck, Truck, Smartphone, Headphones, BatteryCharging, Laptop, Gamepad2, Watch, Package, MapPin, Phone, Instagram, ExternalLink } from 'lucide-react';
 import { site } from '../config/site';
 import ProductCard from '../components/ProductCard';
 const splitTitle = lines => <>{lines[0]}<br/><i>{lines[1]}</i></>;
 const categoryIcons = { Phones: Smartphone, Audio: Headphones, Power: BatteryCharging, Computing: Laptop, Gaming: Gamepad2, Accessories: Watch };
-export default function Home({ go, open, add, cartQty, wishlist, toggleWishlist, products }) {
+export default function Home({ go, open, add, cartQty, wishlist, toggleWishlist, products, storeDetails }) {
   const hero=products[0], story=products[1]||hero;
   return <>
     <section className="tech-hero"><div className="tech-hero-copy"><div className="hero-kicker"><span /> {site.copy.heroEyebrow}</div><h1>{splitTitle(site.copy.heroTitle)}</h1><p className="lead">{site.copy.description}</p><div className="hero-actions"><button className="primary" onClick={() => go('shop')}>{site.labels.shopNow} <ArrowRight /></button><button className="hero-link" onClick={() => go('shop')}>See what’s new</button></div><div className="hero-points"><span><Zap /> Everyday essentials</span><span><ShieldCheck /> Carefully selected</span></div></div>
@@ -14,5 +14,13 @@ export default function Home({ go, open, add, cartQty, wishlist, toggleWishlist,
     <section className="store-featured"><div className="section-head"><div><p className="eyebrow">{site.copy.featuredEyebrow}</p><h2>{site.copy.featuredTitle}</h2></div><button onClick={() => go('shop')}>{site.labels.viewAll} <ArrowRight/></button></div><div className="product-grid">{products.slice(0,3).map(product=><ProductCard key={product.id} product={product} open={open} add={add} quantity={cartQty(product)} wishlist={wishlist} toggleWishlist={toggleWishlist}/>)}</div></section>
     <section className="tech-story">{story&&<><div className="story-visual"><img src={story.images?.[0]} alt={story.name} width="800" height="1000" loading="lazy"/><span>AWESOME / 02</span></div><div className="tech-story-copy"><p className="eyebrow">{site.copy.storyEyebrow}</p><h2>{splitTitle(site.copy.storyTitle)}</h2><p>{site.copy.storyText}</p><button className="secondary" onClick={() => go('about')}>Our story <ArrowRight/></button></div></>}</section>
     <section className="store-cta"><p className="eyebrow">{site.copy.ctaEyebrow}</p><h2>{splitTitle(site.copy.ctaTitle)}</h2><button className="primary" onClick={() => go('shop')}>{site.labels.shopCollection} <ArrowRight/></button></section>
+    {storeDetails && (storeDetails.address || storeDetails.maps_url || storeDetails.phone || storeDetails.whatsapp || storeDetails.instagram_url || storeDetails.tiktok_url || storeDetails.facebook_url) && <section className="store-contact" aria-labelledby="store-contact-title">
+      <div className="store-contact-heading"><p className="eyebrow">VISIT / CONNECT</p><h2 id="store-contact-title">Find us. Follow along.</h2><p>Questions or looking for the shop? Use the details below to get in touch.</p></div>
+      <div className="store-contact-grid">
+        {(storeDetails.address || storeDetails.maps_url) && <div className="store-contact-card"><span className="store-contact-icon"><MapPin aria-hidden="true" /></span><div><h3>Our location</h3>{storeDetails.address && <p>{storeDetails.address}</p>}{storeDetails.maps_url && <a href={storeDetails.maps_url} target="_blank" rel="noreferrer">Open in Google Maps <ExternalLink aria-hidden="true" /></a>}</div></div>}
+        {(storeDetails.phone || storeDetails.whatsapp) && <div className="store-contact-card"><span className="store-contact-icon"><Phone aria-hidden="true" /></span><div><h3>Contact the shop</h3>{storeDetails.phone && <p><a href={'tel:' + storeDetails.phone.replace(/[^+0-9]/g, '')}>{storeDetails.phone}</a></p>}{storeDetails.whatsapp && <a href={'https://wa.me/' + storeDetails.whatsapp.replace(/[^0-9]/g, '')} target="_blank" rel="noreferrer">Chat on WhatsApp <ExternalLink aria-hidden="true" /></a>}</div></div>}
+        {(storeDetails.instagram_url || storeDetails.tiktok_url || storeDetails.facebook_url) && <div className="store-contact-card"><span className="store-contact-icon"><Instagram aria-hidden="true" /></span><div><h3>Follow us</h3><div className="store-social-links">{storeDetails.instagram_url && <a href={storeDetails.instagram_url} target="_blank" rel="noreferrer">Instagram <ExternalLink aria-hidden="true" /></a>}{storeDetails.tiktok_url && <a href={storeDetails.tiktok_url} target="_blank" rel="noreferrer">TikTok <ExternalLink aria-hidden="true" /></a>}{storeDetails.facebook_url && <a href={storeDetails.facebook_url} target="_blank" rel="noreferrer">Facebook <ExternalLink aria-hidden="true" /></a>}</div></div></div>}
+      </div>
+    </section>}
   </>;
 }
