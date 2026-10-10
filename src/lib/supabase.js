@@ -73,10 +73,22 @@ export async function loadStoreProducts() {
     .from('store_products')
     .select('*')
     .eq('store_id', store.id)
+    .eq('is_sold_out', false)
     .order('created_at', { ascending: false });
 
   if (error) throw error;
   return data || [];
+}
+
+export async function loadStoreDetails() {
+  const slug = import.meta.env.VITE_STORE_SLUG || site.storeSlug || 'mara';
+  const { data, error } = await supabase
+    .from('store_sites')
+    .select('brand,slug,whatsapp,address,maps_url,phone,instagram_url,tiktok_url,facebook_url')
+    .eq('slug', slug)
+    .maybeSingle();
+  if (error) throw error;
+  return data || null;
 }
 
 export async function uploadOwnerImage(file) {
